@@ -24,7 +24,7 @@ console.log(chalk.green(`Your token is: ${config.token.substring(0, 4)}...`));
 
 if (process.env.NODE_ENV != "test") {
 	(async () => {
-		// await listAuthenicatedUserRepos();
+		await listAuthenicatedUserRepos();
 		await listBranches(userId, "ssw_345");
 		// await createRepo(userId, newrepo);
 		// await createIssue(userId, repo, issue);
@@ -93,7 +93,6 @@ async function listBranches(owner, repo) {
 				return; // Terminate execution.
 			}
 			var obj = JSON.parse(body);
-			console.log(obj);
 			for (var i = 0; i < obj.length; i++) {
 				var name = obj[i].name;
 				console.log(name);
@@ -107,11 +106,17 @@ async function listBranches(owner, repo) {
 
 // 2. Write code to create a new repo
 async function createRepo(owner, repo) {
-	let options = getDefaultOptions("/", "POST");
+	let options = getDefaultOptions(`/orgs/${owner}/repos`, "POST");
+	options.body = JSON.stringinfy({name:repo, has_wiki: true});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function (resolve, reject) {
 		request(options, function (error, response, body) {
+			if (error) {
+				console.log(chalk.red(error));
+				reject(error);
+				return; // Terminate execution.
+			}
 			resolve(response.statusCode);
 		});
 	});
