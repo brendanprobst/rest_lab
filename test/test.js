@@ -36,7 +36,7 @@ describe("GitHub EndPoint Tests", function () {
 		let user = await github.getUser();
 		let status = await github.createIssue(
 			user,
-			"testing",
+			"`testing`",
 			"issue name",
 			"issue body"
 		);
